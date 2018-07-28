@@ -22,7 +22,7 @@ def main():
     rows = get_rows(dataframe, columns)
     print(columns)
     print(rows)
-    save_dataframe_to_csv(dataframe, './dataset.2.csv')
+    save_dataframe_to_csv(dataframe, './dataset_copy.csv')
 
 if __name__   == "__main__":
     main()
