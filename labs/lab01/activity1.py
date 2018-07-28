@@ -1,7 +1,7 @@
 #!/usr/local/bin/python3
 import pandas
 
-def get_dataframe_from_cse(filename):
+def get_dataframe_from_csv(filename):
     dataframe = pandas.read_csv(filename)
     return dataframe
 
@@ -17,7 +17,7 @@ def save_dataframe_to_csv(dataframe, filename):
     dataframe.to_csv(filename)
 
 def main():
-    dataframe = get_dataframe_from_cse('./dataset.csv')
+    dataframe = get_dataframe_from_csv('./dataset.csv')
     columns = get_columns(dataframe)
     rows = get_rows(dataframe, columns)
     print(columns)
