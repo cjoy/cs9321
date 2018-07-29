@@ -20,8 +20,6 @@ def main():
     dataframe = get_dataframe_from_csv('./dataset.csv')
     columns = get_columns(dataframe)
     rows = get_rows(dataframe, columns)
-    print(columns)
-    print(rows)
     save_dataframe_to_csv(dataframe, './dataset_copy.csv')
 
 if __name__   == "__main__":
