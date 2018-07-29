@@ -22,5 +22,5 @@ def main():
     rows = get_rows(dataframe, columns)
     save_dataframe_to_csv(dataframe, './dataset_copy.csv')
 
-if __name__   == "__main__":
+if __name__ == "__main__":
     main()

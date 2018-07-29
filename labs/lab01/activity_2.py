@@ -21,5 +21,5 @@ def main():
     store_dataframe_to_sqlite3(connection, dataframe, db_name)
     dataframe_from_db = read_sqlite3_to_dataframe(connection, db_name)
 
-if __name__   == "__main__":
+if __name__ == "__main__":
     main()

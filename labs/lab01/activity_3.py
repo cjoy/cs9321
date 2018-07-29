@@ -23,5 +23,5 @@ def main():
     store_dataframe_to_mongo(connection, dataframe, collection)
     dataframe_from_db = read_mongo_to_dataframe(connection, collection)
 
-if __name__   == "__main__":
+if __name__ == "__main__":
     main()
