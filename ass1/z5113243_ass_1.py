@@ -1,4 +1,7 @@
+#!/usr/bin/env python3
 import pandas as pd
+import matplotlib.pyplot as plt
+import re
 
 '''
 '' QUESTION FUNCTIONS
@@ -35,7 +38,8 @@ def question_5(df):
   return f'{country} has won {max_gold} gold medals during the summer olympics.'
 
 def question_6(df):
-  df['Gold (difference)'] = df.apply(lambda row: abs(int(row['Gold (summer)']) - int(row['Gold (winter)'])), axis=1)
+  gold_diff = lambda row: abs(int(row['Gold (summer)']) - int(row['Gold (winter)']))
+  df['Gold (difference)'] = df.apply(gold_diff, axis=1)
   max_difference = df['Gold (difference)'].max()
   country = df[df['Gold (difference)'] == max_difference].index[0]
   return f'{country} has the max difference between their summer and winter gold medals by {max_difference}.'
@@ -43,26 +47,29 @@ def question_6(df):
 def question_7(df):
   return df.sort_values(by='Total.1', ascending=False)
 
-def question_8():
-  # insert code here
-  return 
+def question_8(df):
+  return df[['Total (winter)', 'Total (summer)']].plot(kind='barh', stacked=True)
 
-def question_9():
-  # insert code here
-  return
+def question_9(df):
+  countries = ['United States', 'Australia', 'Great Britain', 'Japan', 'New Zealand']
+  columns = ['Gold (winter)', 'Silver (winter)', 'Bronze (winter)']
+  return df.loc[df.index.isin(countries)][columns].plot(kind='bar', stacked=False, rot=0)
 
 '''
 '' HELPERS AND MAIN FUNCTION
 '''
 
 # Helper function to clean columns
-def clean_columns(df):
+def clean(df):
   # Drop last row
   df.drop(df.tail(1).index, inplace=True)
   # Transform string to integers
   columns = df.columns[1:]
   df[columns] = df[columns].replace({'\$': '', ',': ''}, regex=True)
   df[columns] = df[columns].astype(int)
+  # Clean up country names (ie. remove symols and extra spaces)
+  df.index = df.index.map(lambda t: re.sub('\s\(.*$', '', t))
+  df.index = df.index.map(lambda t: re.sub('^\s', '', t))
   return df
 
 # Helper function to pretty print all questions
@@ -81,10 +88,13 @@ if __name__ == '__main__':
   print_question(3, 'Remove "Rubish" column and print first five rows.', df_result.head(5))
   df_result = question_4(df_result)
   print_question(4, 'Drop rows with with NaN fields and display last 10 rows.', df_result.tail(10))
-  df_result = clean_columns(df_result) # Clean columns further for further analysis
+  df_result = clean(df_result) # Clean data (needed for further questions)
   print_question(5, 'Which country has won the most gold medals in summer games?', question_5(df_result))
   print_question(6, 'Which country has the biggest difference between their summer and winter gold medals?', question_6(df_result))  
   df_result = question_7(df_result)
   print_question(7, 'First and last five rows of countries sorted in descending order?', df_result.head(5).append(df_result.tail(5)))
+  print_question(8, 'Plot top ten results from question 7 as stacked horizontal bar graph.', question_8(df_result.head(10)))  
+  print_question(9, 'Plot winter medals for United States, Australia, Great Britain, Japan and New Zealand.', question_9(df_result))  
+  plt.show()
   # DEBUG: Write resulting dataframe into final_dataset.csv after all transformations
   df_result.to_csv('./final_dataset.csv')
