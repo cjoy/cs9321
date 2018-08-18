@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3
+#!/usr/bin/env python3
 import pandas
 
 def get_dataframe_from_csv(filename):
