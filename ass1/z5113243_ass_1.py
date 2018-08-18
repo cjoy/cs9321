@@ -48,12 +48,12 @@ def question_7(df):
   return df.sort_values(by='Total.1', ascending=False)
 
 def question_8(df):
-  return df[['Total (winter)', 'Total (summer)']].plot(kind='barh', stacked=True)
+  return df[['Total (winter)', 'Total (summer)']].plot(kind='barh', stacked=True, title='Medals for Winter and Summer Games')
 
 def question_9(df):
   countries = ['United States', 'Australia', 'Great Britain', 'Japan', 'New Zealand']
   columns = ['Gold (winter)', 'Silver (winter)', 'Bronze (winter)']
-  return df.loc[df.index.isin(countries)][columns].plot(kind='bar', stacked=False, rot=0)
+  return df.loc[df.index.isin(countries)][columns].plot(kind='bar', stacked=False, rot=0, title='Winter Games')
 
 '''
 '' HELPERS AND MAIN FUNCTION
