@@ -85,7 +85,7 @@ if __name__ == '__main__':
   df_result = question_1(df_1, df_2) 
   print_question(1, 'Merge both datasets and print first five rows.', df_result.head(5)) 
   df_result = question_2(df_result)
-  print_question(2, 'Set index as the country name and print index of first row.', df_result.head(1).index[0])
+  print_question(2, 'Set index as the country name and print the first row.', df_result.head(1))
   df_result = question_3(df_result)
   print_question(3, 'Remove "Rubish" column and print first five rows.', df_result.head(5))
   df_result = question_4(df_result)
