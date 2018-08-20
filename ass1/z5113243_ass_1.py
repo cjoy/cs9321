@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from tabulate import tabulate
 import pandas as pd
 import matplotlib.pyplot as plt
 import re
@@ -75,6 +76,7 @@ def clean(df):
 # Helper function to pretty print all questions
 def print_question(number, description, output):
   line = f' {"-"*(14+len(description))}'
+  output = f'Columns: {list(output.columns)}\nRows:\n{tabulate(output, tablefmt="grid")}' if isinstance(output, pd.DataFrame) else output
   print(f'{line}\n| Question {number}: {description} |\n{line}\n{output}\n')
 
 if __name__ == '__main__':
