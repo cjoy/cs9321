@@ -98,5 +98,3 @@ if __name__ == '__main__':
   print_question(8, 'Plot top ten results from question 7 as stacked horizontal bar graph.', question_8(df_result.head(10)))  
   print_question(9, 'Plot winter medals for United States, Australia, Great Britain, Japan and New Zealand.', question_9(df_result))  
   plt.show()
-  # DEBUG: Write resulting dataframe into final_dataset.csv after all transformations
-  df_result.to_csv('./final_dataset.csv')
