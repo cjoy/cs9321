@@ -35,15 +35,13 @@ def question_4(df):
 
 def question_5(df):
   max_gold = df['Gold (summer)'].max()
-  country = df[df['Gold (summer)'] == max_gold].index[0]
-  return f'{country} has won {max_gold} gold medals during the summer olympics.'
+  return df[df['Gold (summer)'] == max_gold]
 
 def question_6(df):
   gold_diff = lambda row: abs(int(row['Gold (summer)']) - int(row['Gold (winter)']))
   df['Gold (difference)'] = df.apply(gold_diff, axis=1)
   max_difference = df['Gold (difference)'].max()
-  country = df[df['Gold (difference)'] == max_difference].index[0]
-  return f'{country} has the max difference between their summer and winter gold medals by {max_difference}.'
+  return df[df['Gold (difference)'] == max_difference]
 
 def question_7(df):
   return df.sort_values(by='Total.1', ascending=False)
@@ -76,7 +74,7 @@ def clean(df):
 # Helper function to pretty print all questions
 def print_question(number, description, output):
   line = f' {"-"*(14+len(description))}'
-  output = f'Columns: {list(output.columns)}\nRows:\n{tabulate(output, tablefmt="grid")}' if isinstance(output, pd.DataFrame) else output
+  output = f'Columns: {", ".join(list(output.columns))}\nRows:\n{tabulate(output, tablefmt="grid")}' if isinstance(output, pd.DataFrame) else output
   print(f'{line}\n| Question {number}: {description} |\n{line}\n{output}\n')
 
 if __name__ == '__main__':
@@ -95,6 +93,6 @@ if __name__ == '__main__':
   print_question(6, 'Which country has the biggest difference between their summer and winter gold medals?', question_6(df_result))  
   df_result = question_7(df_result)
   print_question(7, 'First and last five rows of countries sorted in descending order?', df_result.head(5).append(df_result.tail(5)))
-  print_question(8, 'Plot top ten results from question 7 as stacked horizontal bar graph.', question_8(df_result.head(10)))  
-  print_question(9, 'Plot winter medals for United States, Australia, Great Britain, Japan and New Zealand.', question_9(df_result))  
+  print_question(8, 'Plot top ten results from question 7 as stacked horizontal bar graph.', question_8(df_result.head(10)))
+  print_question(9, 'Plot winter medals for United States, Australia, Great Britain, Japan and New Zealand.', question_9(df_result))
   plt.show()
