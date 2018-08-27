@@ -47,7 +47,8 @@ def question_7(df):
   return df.sort_values(by='Total.1', ascending=False)
 
 def question_8(df):
-  return df[['Total (winter)', 'Total (summer)']].plot(kind='barh', stacked=True, title='Medals for Winter and Summer Games')
+  columns = ['Total (winter)', 'Total (summer)']
+  return df[columns].plot(kind='barh', stacked=True, title='Medals for Winter and Summer Games')
 
 def question_9(df):
   countries = ['United States', 'Australia', 'Great Britain', 'Japan', 'New Zealand']
@@ -74,7 +75,7 @@ def clean(df):
 # Helper function to pretty print all questions
 def print_question(number, description, output):
   line = f' {"-"*(14+len(description))}'
-  output = f'Columns: {", ".join(list(output.columns))}\nRows:\n{tabulate(output, tablefmt="grid")}' if isinstance(output, pd.DataFrame) else output
+  output = f'Columns: {output.index.name}, {", ".join(list(output.columns))}\nRows:\n{tabulate(output, tablefmt="grid")}' if isinstance(output, pd.DataFrame) else output
   print(f'{line}\n| Question {number}: {description} |\n{line}\n{output}\n')
 
 if __name__ == '__main__':
