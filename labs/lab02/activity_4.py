@@ -4,7 +4,7 @@ from activity_2 import clean_columns
 
 def main():
     # Load the dataset into a dataframe
-    dataframe = pandas.read_csv('./dataset.csv')
+    dataframe = pandas.read_csv('../common/Books.csv')
     # Apply the cleansing methods discussed in Activity-2
     dataframe = clean_columns(dataframe)
     # Replace the spaces in the column names with the underline character ('_')

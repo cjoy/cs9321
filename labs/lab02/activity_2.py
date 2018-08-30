@@ -17,7 +17,7 @@ def clean_columns(dataframe):
 
 def main():
     # Load the dataset into a dataframe
-    dataframe = pandas.read_csv('./dataset.csv')
+    dataframe = pandas.read_csv('../common/Books.csv')
     # Cleanse dataframe
     dataframe = clean_columns(dataframe)
     # Print the dataframe to see if the changes have been applied properly

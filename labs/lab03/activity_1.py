@@ -17,7 +17,7 @@ def clean(dataframe):
     return dataframe
 
 def main():
-  dataframe = clean(pandas.read_csv('../lab02/dataset.csv'))
+  dataframe = clean(pandas.read_csv('../common/Books.csv'))
   dataframe['Place of Publication'].value_counts().plot.pie()
   plt.show()
 
