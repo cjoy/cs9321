@@ -3,7 +3,7 @@ import pandas
 
 def main():
     # Load the dataset into a dataframe
-    dataframe = pandas.read_csv('./dataset.csv')
+    dataframe = pandas.read_csv('../common/Books.csv')
     # Calculate and print the number of nan (not a 
     # number) in each column
     nan_cols = dataframe.isnull().sum()
