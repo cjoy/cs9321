@@ -17,8 +17,8 @@ class Books(Resource):
   def delete(self, id):
     if id not in dataframe.index:
       return {'error': 'Book not found.'}, 404
-    dataframe.drop(id)
-    return {'status': 'Book removed'}, 200
+    dataframe.drop(id, inplace=True)
+    return {'status': f'Book {id} removed'}, 200
 
 if __name__ == '__main__':
   dataframe = clean(pandas.read_csv('../common/Books.csv'))
