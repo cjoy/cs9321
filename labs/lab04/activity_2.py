@@ -10,13 +10,9 @@ api = Api(app)
 
 @api.route('/books/<int:id>')
 class Books(Resource):
-  def get(self, id):
-    if id not in dataframe.index:
-      return {'error': 'Book not found.'}, 404
-    return dataframe.loc[id].to_dict(), 200
   def delete(self, id):
     if id not in dataframe.index:
-      return {'error': 'Book not found.'}, 404
+      return {'status': 'Book not found.'}, 404
     dataframe.drop(id, inplace=True)
     return {'status': f'Book {id} removed'}, 200
 

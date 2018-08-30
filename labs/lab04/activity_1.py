@@ -23,7 +23,7 @@ def clean(dataframe):
 class Books(Resource):
   def get(self, id):
     if id not in dataframe.index:
-      return {'error': 'Book not found.'}, 404
+      return {'status': 'Book not found.'}, 404
     return dataframe.loc[id].to_dict(), 200
 
 if __name__ == '__main__':
