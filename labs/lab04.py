@@ -2,7 +2,7 @@
 import pandas
 from flask import Flask, request
 from flask_restplus import Resource, Api, fields
-from activity_1 import clean
+from common.Books import clean
 
 # Initialise flask
 app = Flask(__name__)
@@ -29,6 +29,17 @@ Book = api.model('Resource', {
 @api.route('/books/<int:id>')
 class Books(Resource):
   @api.expect(Book)
+  def get(self, id):
+    if id not in dataframe.index:
+      return {'status': 'Book not found.'}, 404
+    return dataframe.loc[id].to_dict(), 200
+
+  def delete(self, id):
+    if id not in dataframe.index:
+      return {'status': 'Book not found.'}, 404
+    dataframe.drop(id, inplace=True)
+    return {'status': f'Book {id} removed'}, 200
+
   def put(self, id):
     if id not in dataframe.index:
       return {'status': 'Book not found.'}, 404
@@ -37,10 +48,10 @@ class Books(Resource):
       return {'status': 'Identifier can\'t be changed.'}, 400
     for key in req:
       if key not in Book.keys():
-        return {'status': 'Unexpect value in body'}, 400
+        return {'status': f'Unexpect key \'{key}\' in body'}, 400
       dataframe.loc[id, key] = req[key]
     return dataframe.loc[id].to_dict(), 200
 
 if __name__ == '__main__':
-  dataframe = clean(pandas.read_csv('../common/Books.csv'))
+  dataframe = clean(pandas.read_csv('./common/Books.csv'))
   app.run(debug=True)
