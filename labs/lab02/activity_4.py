@@ -10,7 +10,7 @@ def main():
     # Replace the spaces in the column names with the underline character ('_')
     dataframe.columns = [c.replace(' ', '_') for c in dataframe.columns]
     # Load the City dataset into a dataframe
-    city_df = pandas.read_csv('./City.csv')
+    city_df = pandas.read_csv('./dataset.csv')
     # Merge two datasets based on the name of city
     merged_df = pandas.merge(dataframe, city_df, how='left', left_on=['Place_of_Publication'], right_on=['City'])
     # Group by the resultant dataframe based on the country column 
