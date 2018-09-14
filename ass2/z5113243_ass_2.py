@@ -98,12 +98,12 @@ class CollectionIndex(Resource):
     } for doc in db[COLLECTION].find()], 200
 
 @api.route(f'/{COLLECTION}/<collection_id>')
-class Collections(Resource):
+class CollectionsById(Resource):
   # Q2 - Deleting a collection with the data service
   def delete(self, collection_id):
     # Check if collection exists
     if not db[COLLECTION].find_one({'_id': ObjectId(collection_id)}):
-      return { 'message': 'Unable to delete indicator, because it does not exist.' }, 400
+      return { 'message': 'Unable to delete indicator.' }, 400
     # Remove collection from db
     db[COLLECTION].delete_one({'_id': ObjectId(collection_id)})
     return { 'message': f'Collection = {collection_id} is removed from the database!' }, 200
@@ -111,7 +111,7 @@ class Collections(Resource):
   # Q4 - Retrieve a collection
   def get(self, collection_id):
     if not db[COLLECTION].find_one({'_id': ObjectId(collection_id)}):
-      return { 'message': 'Unable to retrieve indicator, because it does not exist.' }, 400
+      return { 'message': 'Unable to retrieve indicator.' }, 400
     collection = db[COLLECTION].find_one({'_id': ObjectId(collection_id)})
     return {
       'collection_id': str(collection['_id']),
@@ -121,14 +121,24 @@ class Collections(Resource):
       'entries': collection['entries'],
     }, 200
 
-@api.route(f'/{COLLECTION}/<collection_id>/<year>/<country>')
-  class IndicatorsCountryYear(Resource):
-    # Q5 - Retrieve economic indicator value for given country and a year
-    def get(self, collection_id, year, country):
-      collection = db[COLLECTION].find_one({'_id': ObjectId(collection_id)})      
-      if not collection:
-        return { 'message': 'Unable to retrieve indicator, because it does not exist.' }, 400
-      # if not 
+@api.route(f'/{COLLECTION}/<collection_id>/<date>/<country>')
+class IndicatorsCountryYear(Resource):
+  # Q5 - Retrieve economic indicator value for given country and a year
+  def get(self, collection_id, date, country):
+    collection = db[COLLECTION].find_one({'_id': ObjectId(collection_id)})      
+    if not collection:
+      return { 'message': 'Unable to retrieve indicator.' }, 400
+    # Create a filtered list containing entries that match params
+    filtered_entries = [
+      entry for entry in collection['entries'] if entry['country'] == country and entry['date'] == date
+    ]
+    if len(filtered_entries) == 0:
+      return { 'message': f'Unable to find specific indicator entry.'}, 400
+    return {
+      'collection_id': str(collection['_id']),
+      'indicator': collection['indicator'],
+      **filtered_entries[0],
+    }, 200
 
 if __name__ == '__main__':
   db = mlab_client(
