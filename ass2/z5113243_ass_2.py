@@ -24,8 +24,7 @@ app = Flask(__name__)
 app.config.SWAGGER_UI_DOC_EXPANSION = 'list'
 api = Api(app,
           title='Assignment 2 - COMP9321 - Chris Joy (z5113243)',
-          description='Data Service for World Bank Economic '\
-          'Indicators.')
+          description='Data Service for World Bank Economic Indicators.')
 indicator_model = api.model(COLLECTION, {
   'indicator_id': fields.String,
 })
