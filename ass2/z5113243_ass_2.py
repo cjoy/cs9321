@@ -3,14 +3,18 @@ from flask import Flask, request
 from flask_restplus import Resource, Api
 from pymongo import MongoClient
 from bson.objectid import ObjectId
-import requests
-import datetime
+import requests, datetime, re
 
-
-#------------- CONFIGURATION CONSTANTS -------------#
+#------------- CONFIG CONSTANTS -------------#
 
 MAX_PAGE_LIMIT = 2
 COLLECTION = 'indicators'
+DB_CONFIG = {
+  'dbuser': 'z5113243',
+  'dbpassword': 'badpassword01',
+  'mlab_inst': 'ds239071',
+  'dbname': 'cs9321_ass2' 
+}
 
 app = Flask(__name__)
 api = Api(app)
@@ -25,7 +29,7 @@ def mlab_client(dbuser, dbpassword, mlab_inst, dbname):
 
 def api_url(indicator, date='2012:2017', format='json', page=1):
   return 'http://api.worldbank.org/v2/countries/all/indicators/' \
-          f'{indicator}?date={date}&format={format}&page={str(page)}'
+          f'{indicator}?date={date}&format={format}&page={page}'
 
 # Recursively build an array containing indicator data
 def get_indicator_data(indicator, page=1, prevRes=[], max_pages=MAX_PAGE_LIMIT):
@@ -38,16 +42,29 @@ def get_indicator_data(indicator, page=1, prevRes=[], max_pages=MAX_PAGE_LIMIT):
     indicator=indicator,
     page=response[0]['page']+1,
     prevRes=prevRes+response[1],
-    max_pages=max_pages
+    max_pages=max_pages,
   )
 
 # Restructure indicator entry according to spec
 def format_indicator_entry(indicator_data):
   return {
     'country': indicator_data['country']['value'],
-    'date': indicator_data['date'],    
+    'date': indicator_data['date'],
     'value': indicator_data['value'],
   }
+
+# Transform to top<k>/bottom<k> queries to array indexes
+def query_to_index(query, arr_size):
+  try:
+    match = re.search(r'^(bottom|top)\d+$', query).group()
+    order = re.search(r'^(bottom|top)', match).group()
+    length = int(re.search(r'\d+$', match).group())
+    if order == 'top':
+      return slice(length)
+    elif order == 'bottom':
+      return slice(arr_size-length, arr_size)
+  except:
+     return slice(arr_size)
 
 #------------- QUESTION ROUTES -------------#
 
@@ -68,12 +85,12 @@ class CollectionIndex(Resource):
         'creation_time': str(existing_collection['creation_time']),
         'indicator': existing_collection['indicator'],
       }, 200
-    # From now onwards we need to get data from the API
+    # From now onwards we need to get data from the Worldbank API
     indicator_data = get_indicator_data(indicator=body['indicator_id'])
     # Valid indicator hasn't been specified (400)
     if indicator_data == 'Invalid indicator':
       return { 'message': 'Please specify a valid indicator.' }, 400
-    # Create and retrieve indicator from api (201)
+    # Create and retrieve indicator from Worldbank API (201)
     indicator = {
       'indicator': indicator_data[0]['indicator']['id'],
       'indicator_value': indicator_data[0]['indicator']['value'],
@@ -122,7 +139,7 @@ class CollectionsById(Resource):
     }, 200
 
 @api.route(f'/{COLLECTION}/<collection_id>/<date>/<country>')
-class IndicatorsCountryYear(Resource):
+class CollectionByCountryYear(Resource):
   # Q5 - Retrieve economic indicator value for given country and a year
   def get(self, collection_id, date, country):
     collection = db[COLLECTION].find_one({'_id': ObjectId(collection_id)})      
@@ -133,18 +150,41 @@ class IndicatorsCountryYear(Resource):
       entry for entry in collection['entries'] if entry['country'] == country and entry['date'] == date
     ]
     if len(filtered_entries) == 0:
-      return { 'message': f'Unable to find specific indicator entry.'}, 400
+      return { 'message': f'Unable to find specific indicator entry.' }, 400
     return {
       'collection_id': str(collection['_id']),
       'indicator': collection['indicator'],
       **filtered_entries[0],
     }, 200
 
+@api.route(f'/{COLLECTION}/<collection_id>/<date>')
+class CollectionByTopBottom(Resource):
+  # Q6 - Retrieve top/bottom economic indicator values for a given year
+  def get(self, collection_id, date):
+    query = request.args.get('q')
+    collection = db[COLLECTION].find_one({'_id': ObjectId(collection_id)})      
+    if not collection:
+      return { 'message': 'Unable to retrieve indicator' }, 400
+    if not query:
+      return {
+        'indicator': collection['indicator'],
+        'indicator_value': collection['indicator_value'],
+        'entries': collection['entries'],
+      }, 200
+    return {
+      'indicator': collection['indicator'],
+      'indicator_value': collection['indicator_value'],
+      'entries': sorted(
+        collection['entries'], key=lambda k: k['value'],
+        reverse=True
+      )[query_to_index(query, len(collection['entries']))],
+    }, 200
+
 if __name__ == '__main__':
   db = mlab_client(
-    dbuser='z5113243',
-    dbpassword='badpassword01',
-    mlab_inst='ds239071',
-    dbname='cs9321_ass2'
+    dbuser=DB_CONFIG['dbuser'],
+    dbpassword=DB_CONFIG['dbpassword'],
+    mlab_inst=DB_CONFIG['mlab_inst'],
+    dbname=DB_CONFIG['dbname']
   )
   app.run(debug=True)
