@@ -143,21 +143,29 @@ class CollectionsById(Resource):
   @api.doc(description='[Q2] Deleting a collection with the data service.')
   @api.response(200, 'Successfully removed collection.')
   @api.response(404, 'Unable to find collection.')
+  @api.response(400, 'Unable to remove collection.')
   def delete(self, collection_id):
     # Check if collection exists
-    if not db[COLLECTION].find_one({'_id': ObjectId(collection_id)}):
-      return { 'message': 'Unable to find indicator.' }, 404
+    try:
+      db[COLLECTION].find_one({'_id': ObjectId(collection_id)})
+    except:
+      return { 'message': 'Unable to find collection.' }, 404
     # Remove collection from db
-    db[COLLECTION].delete_one({'_id': ObjectId(collection_id)})
-    return { 'message': f'Collection = {collection_id} has been removed from the database!' }, 200
+    try:
+      db[COLLECTION].delete_one({'_id': ObjectId(collection_id)})
+      return { 'message': f'Collection = {collection_id} has been removed from the database!' }, 200
+    except:
+      return { 'message': 'Unable to remove collection.' }, 400
+    return { 'message': 'Unable to remove collection.' }, 400
 
   @api.doc(description='[Q4] Retrieve a collection.')
   @api.response(200, 'Successfully retreived collection.')
   @api.response(404, 'Unable to retreive collection.')
   def get(self, collection_id):
-    if not db[COLLECTION].find_one({'_id': ObjectId(collection_id)}):
-      return { 'message': 'Unable to retrieve indicator.' }, 404
-    collection = db[COLLECTION].find_one({'_id': ObjectId(collection_id)})
+    try:
+      collection = db[COLLECTION].find_one({'_id': ObjectId(collection_id)})
+    except:
+      return { 'message': 'Unable to find collection' }, 404
     return {
       'collection_id': str(collection['_id']),
       'indicator': collection['indicator'],
@@ -176,9 +184,10 @@ class CollectionByCountryYear(Resource):
   @api.response(400, 'Unable to retrieve indicator entry.')
   @api.response(404, 'Unable to find collection.')
   def get(self, collection_id, date, country):
-    collection = db[COLLECTION].find_one({'_id': ObjectId(collection_id)})      
-    if not collection:
-      return { 'message': 'Unable to find collection.' }, 404
+    try:
+      collection = db[COLLECTION].find_one({'_id': ObjectId(collection_id)})
+    except:
+      return { 'message': 'Unable to find collection' }, 404
     # Create a filtered list containing entries that match params
     filtered_entries = [
       entry for entry in collection['entries'] if entry['country'] == country and entry['date'] == date
@@ -201,8 +210,9 @@ class CollectionByTopBottom(Resource):
   @api.expect(parser)
   def get(self, collection_id, date):
     query = request.args.get('q')
-    collection = db[COLLECTION].find_one({'_id': ObjectId(collection_id)})      
-    if not collection:
+    try:
+      collection = db[COLLECTION].find_one({'_id': ObjectId(collection_id)})
+    except:
       return { 'message': 'Unable to find collection' }, 404
     filtered_entries = [
       entry for entry in collection['entries'] if entry['date'] == date
