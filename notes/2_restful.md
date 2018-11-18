@@ -125,10 +125,10 @@ Nowadays JSON/REST is the preferred choice.
 ## Richardson Maturity Model
 Leonard Richardson: can we measure to what level your service is RESTful?
 
-Level0: One URI (single endpoint) exposed, requests contain operation details
-Level1: Expose resource URIs - individual URIs for each resource. Requests could still contain some operation details
-Level2: HTTP Methods - use the standard HTTP methods, status codes with the resource URIs
-Level3: HATEOAS - self-documenting responses include links that the client can use
+- Level0: One URI (single endpoint) exposed, requests contain operation details
+- Level1: Expose resource URIs - individual URIs for each resource. Requests could still contain some operation details
+- Level2: HTTP Methods - use the standard HTTP methods, status codes with the resource URIs
+- Level3: HATEOAS - self-documenting responses include links that the client can use
 
 
 # Tools of the trade (Python)
