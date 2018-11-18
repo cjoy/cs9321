@@ -1,24 +1,24 @@
 # Web Essentials
 Web = Higher level protocol over the internet.
 
-Three basic componentes of the web: 
+Three basic components of the web: 
 1. URL (Uniform Resource Locator) - A Uniform Notation Schema for addressing resources
 - eg. http(s)://domain/path?query=something#fragment_identifer
 
-2. HTTP (Hypertext Transpot Protocol) - A protocol for transporting messages
+2. HTTP (Hypertext Transport Protocol) - A protocol for transporting messages
 - Request line + Header + Additional Data
 - eg. GET http(s)://domain/resource
 - Must have a newline (CRLF) between the header and the additional data part
-- Header might contain: User-Agent, Referer, Authorization
+- Header might contain: User-Agent, Referrer, Authorization
 - Additional data (body): block of data in POST etc...
 
 3. HTML (Hypertext Markup Language) - A markup language for formatting hypertext documents
-- What webpages are mainly build with. Blah blah blah...
+- What web-pages are mainly build with. Blah blah blah...
 
 ![Web Essentials](images/web_essence.png)
 
 ## HTTP Request Methods
-* GET     - retreive data identified by the URL
+* GET     - retrieve data identified by the URL
 * HEAD    - returns the HTTP headers without the document body
 * POST    - used to transfer a block of data to the server (ie. CREATE entities when entity identifier is not known)
 * OPTIONS - used to query server about the capabilities it provides.
@@ -40,7 +40,7 @@ Status Codes:
 * 200 - OK - Request processed normally
 * 201 - Created - Your request creates a new resource
 * 301 - Moved Permanently - URI for the requested resource has changed
-* 401 - Unauthorised - The resource is password protected and the user has not yet supplied a valid password
+* 401 - Unauthorized - The resource is password protected and the user has not yet supplied a valid password
 * 403 - Forbidden - The resource is password protected and the user has not yet supplied a valid password
 * 404 - Not Found - No resource corresponding the URI was found
 * 500 - Internal Server Error - Server software detected an internal failure
@@ -74,7 +74,7 @@ Nowadays JSON/REST is the preferred choice.
   - eg. Students, Users, Courses, Programs
 - REST principles do not specify a "standard data format"
 
-## Architectural Contraints of REST
+## Architectural Constraints of REST
 ### 1. Client-Server
 - server-side is physically separated from the client app
 - both sides can evolve without affecting each other
@@ -83,13 +83,13 @@ Nowadays JSON/REST is the preferred choice.
 
 ### 2. Uniform Interface
 - uniform ~ common in all RESTful interface
-- resources are identied by a URI (Uniform Resource Identifier)
+- resources are identity by a URI (Uniform Resource Identifier)
 - a resource has to have at least one URI and every URI designates exactly one resource
 - Well common URI types:
   - URN - Uniform Resource Name
   - URL - Uniform Resource Locator
 - the resource must be addressable
-- an application is 'addressable' if it exposess its data set as a resource
+- an application is 'addressable' if it exposes its data set as a resource
 - a resource needs a representation for it to be sent to the client
   - some data about the current state of a resource (eg. books - cover image, reviews, related books, authors etc)
 - can provide multiple representation. ie. users can decide between different representations
@@ -97,15 +97,15 @@ Nowadays JSON/REST is the preferred choice.
   - Safe: Read-only operation on a resource don't change any server state. The client can call the operation 10 times without effecting the server
   - Idempotent: Operation that have the same effect whether you apply it once or more than once. 
   - Allows the uniformity in REST interface
-- Use pure HTTTP methods as main operation on resources. HTTP Spec
-  - GET: Retrieve a resource. (safe + idempontent)
+- Use pure HTTP methods as main operation on resources. HTTP Spec
+  - GET: Retrieve a resource. (safe + idempotent)
   - PUT: Update a resource (existing URI), otherwise create a new resource. (idempotent)
-  - DELETE: Clear a resource after the URI is no longer valid  (idempotent - delete once it's gona, delete again, it's still gone)
-  - POST: Creates a new resource when the identifer is not known. Server generates the resource's UIR and returns the new URI for the resource in the response.
+  - DELETE: Clear a resource after the URI is no longer valid  (idempotent - delete once it's gonna, delete again, it's still gone)
+  - POST: Creates a new resource when the identifier is not known. Server generates the resource's URI and returns the new URI for the resource in the response.
 - Linked resources: server send the client guidelines about which states are near and the current one (ie. links to next and previous page)
 
 ### 3. Statelessness
-- all client requests are independant and happen in complete isolation from each other
+- all client requests are independent and happen in complete isolation from each other
 - separation of client application state and RESTful resource state
 - server does not keep the application state on behalf of a client
 - scalable, easy to ache, addressable URI can be bookmarked
@@ -133,7 +133,7 @@ Level3: HATEOAS - self-documenting responses include links that the client can u
 
 # Tools of the trade (Python)
 - Flask: python micro web framework. It allows you to build light-weight web apps, but it has good capabilities because it support extensions
-- Flask RESTPlus: an extension for flask that adds support for quickly buiding REST AOIs. Encourages best practices with minimal setup (ie. decorators and tools to describe the API and expose its documentation) 
+- Flask RESTPlus: an extension for flask that adds support for quickly building REST APIs. Encourages best practices with minimal setup (ie. decorators and tools to describe the API and expose its documentation) 
 - Swagger: Documentation framework for the OPEN API initiative. Flask RESTPlus generates docs using swagger.
 
 # Designing an API
@@ -144,7 +144,7 @@ Level3: HATEOAS - self-documenting responses include links that the client can u
 
 ## URI design
 - Avoid using 'www', instead use 'api' as the sub domain
-- Identify and name the resources. We want to move away from the RPC-style interface design where lots of operation names are userd in the URL
+- Identify and name the resources. We want to move away from the RPC-style interface design where lots of operation names are used in the URL
   - eg. /getCoffeeOrders, /createOrder, /getOrder?id=123
 - Use nouns (preferably plurals)
   - eg. /orders, /items, /resources
@@ -158,14 +158,14 @@ Level3: HATEOAS - self-documenting responses include links that the client can u
 
 # HATEOAS (Hypermedia As The Engine Of Application State)
 - Principle is that a client interacts with a network application entirely through hypermedia provided dynamically by application servers. A REST client needs no prior knowledge about how to interact with any particular application or server beyond a generic understanding of hypermedia.
-![Not using hateoas](images/not-hateoas.png)
-![Using hateoas](images/hateoas.png)
+![Not using HATEOAS](images/not-hateoas.png)
+![Using HATEOAS](images/hateoas.png)
 
 - Help the clients use the API (self-describing as possible)
 - Navigate paging (prev, next, self)
 - Help create new/related items
 - Allow retrieving associations (ie. relationships)
-- Hint at possible actins (update, delete)
+- Hint at possible actions (update, delete)
 - Evolve your workflow
 - How HATEOAS links are implemented is different from one implementation to another
 
@@ -177,20 +177,20 @@ Level3: HATEOAS - self-documenting responses include links that the client can u
 
 # REST API Security
 ## OWASP REST API Security Cheat Sheet
-- It matter enought that OWAS included many instances in their web security top ten related to APIs and they have the REST security cheat sheet.
+- It matter enough that OWAS included many instances in their web security top ten related to APIs and they have the REST security cheat sheet.
 - REST relies on the elements of the Web for security too
 - Things to consider: input validation, methods restriction, logging
 - HTTPS (SSL)
   - Strong server authentication, confidentiality and integrity protection the only feasible way to secure against man-in-the-middle attacks
   - Any security sensitive information in REST API should use SSL
-- API developers must deal with authentication and authorisation
-  - Authentication (401 Unauthorised) vs Authorisation (403 Forbidden)
-  - Don't have an access token vs Don't have enough previlleges to complete a particular task
+- API developers must deal with authentication and authorization
+  - Authentication (401 Unauthorized) vs Authorization (403 Forbidden)
+  - Don't have an access token vs Don't have enough privileges to complete a particular task
   - Common API authentication
     - HTTP Basic (and Digest) Authentication: IETF RFC 2617
-    - Token-based authetnication
+    - Token-based authentication
     - API Key [+ Signature]
-    - OAuth (Open Authorisation) Protocol - Strictly uses HTTP protocol elements only
+    - OAuth (Open Authorization) Protocol - Strictly uses HTTP protocol elements only
 
 ## Authentication
 - The basic idea resolves around "login credentials"
@@ -198,7 +198,7 @@ Level3: HATEOAS - self-documenting responses include links that the client can u
   - What would the credentials look like and how would you pass them around "safely"?
   - How to ensure stateless API interactions? (no sessions)
 
-### Http Basic Auth
+### HTTP Basic Auth
 - Issues with HTTP basic auth as an API authentication scheme
 - The password is sent over the network in base64 encoding - which can be converted back to plain text
 - The password is sent repeatedly, for each request - larger attack window
@@ -206,15 +206,15 @@ Level3: HATEOAS - self-documenting responses include links that the client can u
 
 ### Token-based method
 - User enters their login credentials. Server verifies the credentials are correct and returns a token
-- This token is stored client-sode (local storage). Subsequent requests to the server include this token
-- The password is not send arround
+- This token is stored client-side (local storage). Subsequent requests to the server include this token
+- The password is not send around
 - JWT (JSON Web Tokens) - industry standard now (RFC 7519)
   - Message content consists of three pasts JSON data and is encoded and signed
   - A key idea is that the token itself is self contained. You can store the user identity in the JSON, sign it and then send it back to the client. The client will use the token in all subsequent requests to authenticate itself. 
   - Since it's signed, the server can verify and validate the token, without having to do a database lookup, session management
 
 ### The signatures
-- Key-Hash Message AUthentication Code (HMAC) is an algorithm that combines a certain payload with a secret using a cryptographic hash function.
+- Key-Hash Message Authentication Code (HMAC) is an algorithm that combines a certain payload with a secret using a cryptographic hash function.
 - The result is a code that can be used to verify a message only if both the generating and verifying parties know the secret. 
 - HMACs allow messages to be verified through shared secrets
 
@@ -235,7 +235,7 @@ Level3: HATEOAS - self-documenting responses include links that the client can u
 
 # Clients
 The purpose of understanding the contract is for you to understand the following basic tasks that are common in all Web API client. Common tasks include:
-- Recognising the Objects in HTTP responses
+- Recognizing the Objects in HTTP responses
 - Constructing Addresses (URLs) for interacting with the service
 - Handling Actions such as filtering, editing or deleting data
 - OAA challenges - named by Mike Amundsen
