@@ -97,7 +97,7 @@ Our API treats these models as resources that can be manipulated (ie. created, u
   - can be queried and indexed
 
 ## No-SQL Models
-- greater scalability - very large data-sets or high write throughput
+- greater scalability - very large datasets or high write throughput
 - need for more expressive and dynamic data model
 - doesn't require a fixed table schema nor do they use concept of joins
 - most offerings relax ACID properties
@@ -222,7 +222,7 @@ Data-set are messy. Messy data can give wrong insights. Data cleansing involves:
 
 # Data Manipulation
 ## Merging data
-- sometimes in  order to have a complete data set you need to concatenate two data-sets (ie. joining on a field)
+- sometimes in  order to have a complete data set you need to concatenate two datasets (ie. joining on a field)
 ## Applying a function to data
 - sometimes you need to apply a function on the level of the entire data-set (eg. obtaining an average)
 - sometimes you need to apply a function on the level of columns

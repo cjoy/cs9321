@@ -202,7 +202,7 @@ Recall = TP / (TP + FN)
 
 
 # Unsupervised Learning
-- Unsupervised learning involves operating on data-sets without labeled responses or target values.
+- Unsupervised learning involves operating on datasets without labeled responses or target values.
 - The goal is to capture a structure of interest of useful information (eg. relationships)
 - Useful for
     - Visualizing the structure of a complex data-set 
@@ -211,7 +211,7 @@ Recall = TP / (TP + FN)
     - Discover groups or outliers
 
 # Clustering
-- Finding a way to group data in a data-sets (putting them in clusters)
+- Finding a way to group data in a datasets (putting them in clusters)
 - Data points within the same cluster should be close or similar in some way
 - Data points in different clusters should be far away or differ in some way
 
