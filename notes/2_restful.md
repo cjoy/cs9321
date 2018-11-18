@@ -38,6 +38,7 @@ Statuses Digits:
 
 Status Codes:
 * 200 - OK - Request processed normally
+* 201 - Created - Your request creates a new resource
 * 301 - Moved Permanently - URI for the requested resource has changed
 * 401 - Unauthorised - The resource is password protected and the user has not yet supplied a valid password
 * 403 - Forbidden - The resource is password protected and the user has not yet supplied a valid password
@@ -135,4 +136,119 @@ Level3: HATEOAS - self-documenting responses include links that the client can u
 - Flask RESTPlus: an extension for flask that adds support for quickly buiding REST AOIs. Encourages best practices with minimal setup (ie. decorators and tools to describe the API and expose its documentation) 
 - Swagger: Documentation framework for the OPEN API initiative. Flask RESTPlus generates docs using swagger.
 
-# Authentication / Authorisation
+# Designing an API
+- A well-designed API should make it easy for the clients to understand your service without having to "study" the API documents in-depth.
+- Self-describing, self-documenting as much as possible
+- The clients are developers like yourself, so probably they would like to have an API that is easy to pick up and go
+- The RESTful service principles actually give us a straightforward guideline for designing the web API
+
+## URI design
+- Avoid using 'www', instead use 'api' as the sub domain
+- Identify and name the resources. We want to move away from the RPC-style interface design where lots of operation names are userd in the URL
+  - eg. /getCoffeeOrders, /createOrder, /getOrder?id=123
+- Use nouns (preferably plurals)
+  - eg. /orders, /items, /resources
+
+# Deciding on your response format
+- Should support multiple formats and allow the client content negotiation
+- Use simple objects
+- A single result should return a single object
+- Multiple results should return a collection - wrapped in a container
+![Response](images/response.png)
+
+# HATEOAS (Hypermedia As The Engine Of Application State)
+- Principle is that a client interacts with a network application entirely through hypermedia provided dynamically by application servers. A REST client needs no prior knowledge about how to interact with any particular application or server beyond a generic understanding of hypermedia.
+![Not using hateoas](images/not-hateoas.png)
+![Using hateoas](images/hateoas.png)
+
+- Help the clients use the API (self-describing as possible)
+- Navigate paging (prev, next, self)
+- Help create new/related items
+- Allow retrieving associations (ie. relationships)
+- Hint at possible actins (update, delete)
+- Evolve your workflow
+- How HATEOAS links are implemented is different from one implementation to another
+
+# API Versioning
+- When your API is being consumed by the world, upgrading the APIs with some breaking changes would also lead to breaking the existing products or service using your API
+- Try to include the version of your API in the path to minimize confusion of what features in each version.
+  - eg. api.domain.com/v1/resource etc...
+
+
+# REST API Security
+## OWASP REST API Security Cheat Sheet
+- It matter enought that OWAS included many instances in their web security top ten related to APIs and they have the REST security cheat sheet.
+- REST relies on the elements of the Web for security too
+- Things to consider: input validation, methods restriction, logging
+- HTTPS (SSL)
+  - Strong server authentication, confidentiality and integrity protection the only feasible way to secure against man-in-the-middle attacks
+  - Any security sensitive information in REST API should use SSL
+- API developers must deal with authentication and authorisation
+  - Authentication (401 Unauthorised) vs Authorisation (403 Forbidden)
+  - Don't have an access token vs Don't have enough previlleges to complete a particular task
+  - Common API authentication
+    - HTTP Basic (and Digest) Authentication: IETF RFC 2617
+    - Token-based authetnication
+    - API Key [+ Signature]
+    - OAuth (Open Authorisation) Protocol - Strictly uses HTTP protocol elements only
+
+## Authentication
+- The basic idea resolves around "login credentials"
+- Questions
+  - What would the credentials look like and how would you pass them around "safely"?
+  - How to ensure stateless API interactions? (no sessions)
+
+### Http Basic Auth
+- Issues with HTTP basic auth as an API authentication scheme
+- The password is sent over the network in base64 encoding - which can be converted back to plain text
+- The password is sent repeatedly, for each request - larger attack window
+- HTTP Basic Auth combined with SSL could work for some simple situations... But normally this scheme is not recommended and considered not secure "enough"
+
+### Token-based method
+- User enters their login credentials. Server verifies the credentials are correct and returns a token
+- This token is stored client-sode (local storage). Subsequent requests to the server include this token
+- The password is not send arround
+- JWT (JSON Web Tokens) - industry standard now (RFC 7519)
+  - Message content consists of three pasts JSON data and is encoded and signed
+  - A key idea is that the token itself is self contained. You can store the user identity in the JSON, sign it and then send it back to the client. The client will use the token in all subsequent requests to authenticate itself. 
+  - Since it's signed, the server can verify and validate the token, without having to do a database lookup, session management
+
+### The signatures
+- Key-Hash Message AUthentication Code (HMAC) is an algorithm that combines a certain payload with a secret using a cryptographic hash function.
+- The result is a code that can be used to verify a message only if both the generating and verifying parties know the secret. 
+- HMACs allow messages to be verified through shared secrets
+
+![HMAC](images/hmac.png)
+
+![Token-based method](images/token.png)
+
+### API Key Method
+- From User (API consumer) point of view:
+  - Sign up for the service, API key for the user is issued by the server
+  - Copy the issued API key in all requests
+- API Key (in combination with a secret) -> an authentication schema
+- Usually, an API key gives you access to a wide range of services from the same provider
+- API provider may also implement rate limiting (ie. 5 calls per second etc)
+
+## OAuth (Open Authentication)
+![OAuth](images/oauth.png)
+
+# Clients
+The purpose of understanding the contract is for you to understand the following basic tasks that are common in all Web API client. Common tasks include:
+- Recognising the Objects in HTTP responses
+- Constructing Addresses (URLs) for interacting with the service
+- Handling Actions such as filtering, editing or deleting data
+- OAA challenges - named by Mike Amundsen
+Typical workflow:
+1. Execute an HTTP request
+2. Store the response (JSON) in memory 
+3. Inspect the response for the current context
+4. Walk through the response and render the context-related information on the screen
+
+# Caching API Requests
+- TO implement caching, we can use a simple package called requests-cache, which is a "transparent persistent cache for requests"
+- By default the cache is saved in a sqlite database. We could also use a python dict, redis and mongodb.
+
+# Build your own API library
+- If you're developing a sophisticated application, you need to move away from simple calls into constructing your own API library.
+- This also applies if you're the owner of the API, so having an API library can make your API more usable
