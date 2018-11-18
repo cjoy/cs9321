@@ -13,7 +13,7 @@ In this assignment, you are asked to develop a Flask-Restplus data service that 
 ## [Project](https://github.com/movie-base)  (29/30)
 In this assignment, you are asked to develop a Data Analytics Service . Besides a few requirements that you must meet, the specification of the service you'd build is deliberately left open . You are expected to develop a plan and execute it with your group members all throughout this assignment period. 
 
-# [Labs]()
+# [Labs](https://github.com/mrchrisjoy/cs9321/tree/master/labs)
 I've only done the first five labs. Most of my time was spend working the assignments / projects.
 
 # Notes

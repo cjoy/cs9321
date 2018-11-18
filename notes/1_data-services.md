@@ -188,6 +188,7 @@ Styles of ORM:
 - Data Mappers: tries to separate the details of persistence from the objects themselves
   - the idea of 'session', objects and their persistence API as associated with the session. ie. commit changes in a session
 - Active Record: has domain object handle their own persistence (kinda like java classes)
+  - It is a style of ORM in which the domain object itself has methods to handle their own persistence like save() and delete().
   - persistence logic is attached to object (eg. save)
 
 ## Managing and Publishing Metadata
