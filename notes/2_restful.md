@@ -95,7 +95,7 @@ Nowadays JSON/REST is the preferred choice.
 - can provide multiple representation. ie. users can decide between different representations
 - Safe & Idempotent
   - Safe: Read-only operation on a resource don't change any server state. The client can call the operation 10 times without effecting the server
-  - Idempotent: Operation taht have the same effect whether you apply it once or more than once. 
+  - Idempotent: Operation that have the same effect whether you apply it once or more than once. 
   - Allows the uniformity in REST interface
 - Use pure HTTTP methods as main operation on resources. HTTP Spec
   - GET: Retrieve a resource. (safe + idempontent)
