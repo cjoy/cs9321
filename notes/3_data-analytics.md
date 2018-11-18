@@ -5,7 +5,32 @@ Data is collected and stored into an event log.
 
 Algorithms are applied to the event log to find patterns etc that may help in improving process efficiency.
 
-TODO: add more
+![Process mining at a glance](images/process_mining.png)
+
+## Operations Management
+Models are
+- used to redesign, plan and control process flows
+- tailored towards a particular analysis technique
+- only used for answering a specific question
+
+## Business Process Managment
+Process models serve multiple purposes
+
+## Goal
+Decide on which activities need to be executed an in what order
+
+
+## Event Logging
+- Data is captured from exisiting information systems
+    - sensors & IoT devices
+    - system interaction
+- This data is stored in a huge event log
+## The data model
+![Data model](images/data_model.png)
+## Use cases
+
+![Use Case](images/use_case.png)
+
 
 # Data Driven Organisations and Data Analytics
 - Key process performance indicators
